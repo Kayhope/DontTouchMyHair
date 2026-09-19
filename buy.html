@@ -4,50 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buy Hair Oil - Don't Touch My Hair</title>
-    <link rel="stylesheet" href="../nav.css">
+    <link rel="stylesheet" href="nav.css">
     <link rel="stylesheet" href="buy.css">
 </head>
 <body>
     <nav class="site-nav">
-        <div class="nav-brand"><a href="../index.html">Don't Touch My Hair</a></div>
+        <div class="nav-brand"><a href="index.html">Don't Touch My Hair</a></div>
         <ul class="nav-links">
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="../AboutUs/about.html">About</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
             <li><a href="booking.html">Book</a></li>
             <li><a href="buy.html" class="active">Buy Hair Oil</a></li>
         </ul>
     </nav>
 
     <div class="homepage-container">
-        <!-- Hero Section: Clear and eye-catching -->
         <header class="hero-section">
             <h1>Buy Our Exclusive Hair Oil</h1>
-            <p class="hero-text">
-                Strengthen your hair, promote growth, and enhance shine with our premium natural hair oil.
-            </p>
+            <p class="hero-text">Strengthen your hair, promote growth, and enhance shine with our premium natural hair oil.</p>
         </header>
 
-        <!-- Product Display Section: Organized Product Cards -->
         <section class="product-display">
             <h2>Our Products</h2>
-            <p class="product-intro">
-                Explore our carefully crafted hair oils designed to meet all your hair care needs.
-            </p>
+            <p class="product-intro">Explore our carefully crafted hair oils designed to meet all your hair care needs.</p>
             <div class="product-gallery">
                 <div class="product-card">
-                    <img src="../Image/oil1.jpg" alt="Hair Oil Bottle" class="product-image">
+                    <img src="oil1.jpg" alt="Hair Oil Bottle" class="product-image">
                     <h3>Premium Hair Oil - 100ml</h3>
                     <p><strong>Price:</strong> R150</p>
                 </div>
                 <div class="product-card">
-                    <img src="../Image/oil2.jpg" alt="Hair Oil Bottle 2" class="product-image">
+                    <img src="oil1.jpg" alt="Hair Oil Bottle" class="product-image">
                     <h3>Premium Hair Oil - 200ml</h3>
                     <p><strong>Price:</strong> R250</p>
                 </div>
             </div>
         </section>
 
-        <!-- Payment Details Section: Clear instructions for customers -->
         <section class="payment-details">
             <h2>Payment Details</h2>
             <p>To complete your order, please make a payment to the following account:</p>
@@ -64,7 +57,6 @@
             </p>
         </section>
 
-        <!-- Order Form Section: Easy-to-fill, user-friendly form -->
         <section class="order-form-section">
             <h2>Place Your Order</h2>
             <p class="form-instructions">Please fill in the form below to place your order. We'll handle the rest!</p>
@@ -72,31 +64,26 @@
             <div id="orderStatus" style="display:none; padding: 15px; border-radius: 8px; margin-bottom: 20px;"></div>
 
             <form id="orderForm" class="order-form">
-                <!-- Name Field -->
                 <div class="form-group">
                     <label for="name">Full Name:</label>
                     <input type="text" id="name" name="name" placeholder="Enter your full name" required>
                 </div>
 
-                <!-- Email Field -->
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" placeholder="Enter your email" required>
                 </div>
 
-                <!-- Phone Field -->
                 <div class="form-group">
                     <label for="phone">Phone Number:</label>
                     <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
                 </div>
 
-                <!-- Quantity Field -->
                 <div class="form-group">
                     <label for="quantity">Quantity:</label>
                     <input type="number" id="quantity" name="quantity" min="1" placeholder="Enter quantity" required>
                 </div>
 
-                <!-- Collection Method Field -->
                 <div class="form-group">
                     <label for="collection-method">Choose Collection Method:</label>
                     <select id="collection-method" name="collection-method" required>
@@ -106,24 +93,21 @@
                     </select>
                 </div>
 
-                <!-- Dynamic Fields for Collection Methods -->
                 <div class="form-group" id="paxi-details" style="display: none;">
                     <label for="paxi-location">Paxi Collection Location:</label>
                     <textarea id="paxi-location" name="paxi-location" rows="3" placeholder="Enter Paxi collection location"></textarea>
                 </div>
 
                 <div class="form-group" id="collecting-details" style="display: none;">
-                    <p><strong>Note:</strong> Collect your order from our store at: **123 Hair Street, Style City**.</p>
+                    <p><strong>Note:</strong> Collect your order from our store at: 123 Hair Street, Style City.</p>
                 </div>
 
-                <!-- Submit Button -->
                 <button type="submit" class="cta-button">Place Order</button>
             </form>
         </section>
     </div>
 
     <script>
-        // JavaScript to toggle additional details based on the selected collection method
         const collectionMethod = document.getElementById('collection-method');
         const paxiDetails = document.getElementById('paxi-details');
         const collectingDetails = document.getElementById('collecting-details');
@@ -141,11 +125,6 @@
             }
         });
 
-        // No-server version: the order is saved in this browser (so you
-        // still have a record even without a database) and we open a
-        // pre-filled email in your own email app addressed to the salon,
-        // since a plain webpage opened by double-click can't send email
-        // on its own the way a PHP server could.
         const ORDERS_EMAIL = 'orders@donttouchmyhair.com';
         const orderForm = document.getElementById('orderForm');
         const orderStatus = document.getElementById('orderStatus');
@@ -173,7 +152,6 @@
             const phone = document.getElementById('phone').value.trim();
             const quantity = document.getElementById('quantity').value.trim();
             const method = collectionMethod.value;
-            const address = 'N/A';
             const paxiLocation = document.getElementById('paxi-location').value.trim() || 'N/A';
 
             if (!name || !email || !phone || !quantity || !method) {
@@ -185,7 +163,8 @@
                 id: Date.now(),
                 name, email, phone, quantity,
                 collectionMethod: method,
-                address, paxiLocation,
+                address: 'N/A',
+                paxiLocation,
                 createdAt: new Date().toISOString()
             };
 
