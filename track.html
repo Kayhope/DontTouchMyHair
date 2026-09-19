@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Track Bookings</title>
+    <link rel="stylesheet" href="../nav.css">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="track.js"></script>
+</head>
+<body>
+    <nav class="site-nav">
+        <div class="nav-brand"><a href="../index.html">Don't Touch My Hair</a></div>
+        <ul class="nav-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../Book/booking.html">Book</a></li>
+        </ul>
+    </nav>
+
+    <div class="user-container">
+        <header>
+            <h1>Track Customer Bookings</h1>
+            <p style="color:#999; font-size:0.9em;">No-server version — showing bookings saved in this browser (must be opened on the same computer/browser as the booking page).</p>
+        </header>
+
+        <section class="booking-list">
+            <h2>All Bookings</h2>
+            <p id="emptyMsg" class="d-none">No bookings yet.</p>
+            <table id="bookingTable">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Contact</th>
+                        <th>Service</th>
+                        <th>Appointment</th>
+                        <th>Hairpieces</th>
+                        <th>Status</th>
+                        <th>Style Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingList">
+                    <!-- Populated by track.js -->
+                </tbody>
+            </table>
+        </section>
+
+        <footer>
+            <a href="../Book/booking.html">Go to Booking Page</a>
+        </footer>
+    </div>
+</body>
+</html>
