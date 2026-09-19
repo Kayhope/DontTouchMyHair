@@ -1,26 +1,38 @@
-/* Shared site navigation — used on every page */
+/* Shared site navigation */
+:root {
+    --nav-bg: rgba(255, 255, 255, 0.92);
+    --nav-border: #f1dfe0;
+    --nav-text: #2c2c2c;
+    --nav-accent: #d96b72;
+    --nav-accent-deep: #b6535d;
+    --nav-shadow: rgba(56, 26, 29, 0.08);
+}
+
 .site-nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 12px;
-    background-color: #fff;
-    padding: 14px 24px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    gap: 14px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--nav-border);
+    padding: 18px 28px;
+    box-shadow: 0 3px 18px var(--nav-shadow);
     position: sticky;
     top: 0;
     z-index: 100;
 }
 
-.site-nav .nav-brand a {
-    font-size: 1.3em;
-    font-weight: bold;
-    color: #ff5a5f;
+.nav-brand a {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--nav-accent);
     text-decoration: none;
+    letter-spacing: 0.02em;
 }
 
-.site-nav .nav-links {
+.nav-links {
     list-style: none;
     display: flex;
     gap: 22px;
@@ -29,21 +41,32 @@
     flex-wrap: wrap;
 }
 
-.site-nav .nav-links a {
+.nav-links a {
     text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: color 0.2s ease;
+    color: var(--nav-text);
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 999px;
+    transition: all 0.2s ease;
 }
 
-.site-nav .nav-links a:hover,
-.site-nav .nav-links a.active {
-    color: #ff5a5f;
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--nav-accent-deep);
+    background: #fff1f1;
 }
 
 @media (max-width: 600px) {
     .site-nav {
-        flex-direction: column;
+        padding: 16px 18px;
         align-items: flex-start;
+    }
+
+    .nav-links {
+        gap: 8px;
+    }
+
+    .nav-links a {
+        padding: 7px 10px;
     }
 }
