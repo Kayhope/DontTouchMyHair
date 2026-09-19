@@ -51,7 +51,7 @@
                 <li><strong>Branch Code:</strong> 001234</li>
                 <li><strong>Reference:</strong> Your Full Name</li>
             </ul>
-            <p>Once payment is made, please provide proof of payment by emailing us at <a href="mailto:orders@donttouchmyhair.com">orders@donttouchmyhair.com</a>.</p>
+            <p>Once payment is made, please provide proof of payment by emailing us at <a href="mailto:kagisohopem@gmail.com">kagisohopem@gmail.com</a>.</p>
         </section>
 
         <section class="order-form-section">
@@ -108,6 +108,7 @@
         const collectionMethod = document.getElementById('collection-method');
         const paxiDetails = document.getElementById('paxi-details');
         const collectingDetails = document.getElementById('collecting-details');
+        const ORDERS_EMAIL = 'kagisohopem@gmail.com';
 
         collectionMethod.addEventListener('change', function () {
             if (this.value === 'paxi') {
@@ -122,7 +123,6 @@
             }
         });
 
-        const ORDERS_EMAIL = 'orders@donttouchmyhair.com';
         const orderForm = document.getElementById('orderForm');
         const orderStatus = document.getElementById('orderStatus');
 
@@ -183,7 +183,7 @@
             window.location.href = `mailto:${ORDERS_EMAIL}?subject=${subject}&body=${body}`;
 
             showOrderStatus(
-                `Thanks, ${name}! Your order has been saved, and we've opened your email app with the order details ready to send to us. If nothing opened, please email ${ORDERS_EMAIL} directly with your order details.`,
+                `Thanks, ${name}! Your order has been saved, and we've opened your email app with the order details ready to send to ${ORDERS_EMAIL}.`,
                 true
             );
             orderForm.reset();

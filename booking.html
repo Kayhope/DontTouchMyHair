@@ -101,6 +101,7 @@
         const form = document.getElementById('bookingForm');
         const statusBox = document.getElementById('formStatus');
         const submitBtn = document.getElementById('submitBtn');
+        const BOOKING_EMAIL = 'kagisohopem@gmail.com';
 
         function showStatus(message, type) {
             statusBox.textContent = message;
@@ -160,7 +161,22 @@
                 bookings.push(bookingData);
                 localStorage.setItem('dtmh_bookings', JSON.stringify(bookings));
 
-                showStatus('Your appointment has been booked! We\'ll be in touch to confirm.', 'success');
+                const subject = encodeURIComponent(`New appointment booking from ${bookingData.name}`);
+                const body = encodeURIComponent(
+                    `Appointment Booking Details:\n\n` +
+                    `Name: ${bookingData.name}\n` +
+                    `Email: ${bookingData.email}\n` +
+                    `Phone: ${bookingData.phone}\n` +
+                    `Service: ${bookingData.service}\n` +
+                    `Bring Hairpieces: ${bookingData.bringHairpieces}\n` +
+                    `Date: ${bookingData.date}\n` +
+                    `Time: ${bookingData.time}\n` +
+                    `Message: ${bookingData.message || 'None'}\n`
+                );
+
+                window.location.href = `mailto:${BOOKING_EMAIL}?subject=${subject}&body=${body}`;
+
+                showStatus('Your appointment request has been saved and your email app has been opened with the booking details ready to send to kagisohopem@gmail.com.', 'success');
                 form.reset();
                 document.getElementById('charCounter').textContent = '0/250 characters';
             } catch (err) {
