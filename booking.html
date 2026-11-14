@@ -3,20 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book an Appointment - Don't Touch My Hair</title>
+    <meta name="description" content="Choose an available date and request your Don't Touch My Hair salon appointment.">
+    <title>Book an Appointment | Don't Touch My Hair</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="nav.css">
     <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
 </head>
-<body class="bg-light">
+<body>
     <nav class="site-nav">
-        <div class="nav-brand"><a href="index.html" aria-label="Don't Touch My Hair home"><img src="logotam.jpeg" alt="Don't Touch My Hair logo" class="brand-logo"></a></div>
+        <div class="nav-brand"><a href="index.html" aria-label="Don't Touch My Hair home"><img src="logotam.jpeg" alt="" class="brand-logo"><span class="brand-copy"><strong>Don't Touch My Hair</strong><small>Hair salon · Natural care</small></span></a></div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="booking.html" class="active">Book</a></li>
             <li><a href="buy.html">Buy Hair Oil</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
         </ul>
     </nav>
 
@@ -26,25 +28,26 @@
                 <img src="logotam.jpeg" alt="Don't Touch My Hair Logo" class="logo-img">
             </div>
 
-            <h2 class="text-center text-gradient mb-4">Book Your Appointment</h2>
+            <p class="eyebrow text-center">Your time, your style</p>
+            <h2 class="text-center text-gradient mb-4">Let's get you booked.</h2>
             <p class="text-center text-muted mb-4">Transform your look with our expert hair braiding and styling services.</p>
 
             <div id="formStatus" class="alert d-none" role="alert"></div>
 
-            <form id="bookingForm">
+            <form id="bookingForm" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="name" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
+                    <input type="text" class="form-control" id="name" name="name" maxlength="100" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
+                    <input type="email" class="form-control" id="email" name="email" maxlength="100" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="phone" class="form-label">Phone Number</label>
-                    <input type="tel" class="form-control" id="phone" name="phone" required>
+                    <input type="tel" class="form-control" id="phone" name="phone" maxlength="30" required>
                 </div>
 
                 <div class="mb-3">
@@ -60,7 +63,7 @@
                 <div class="mb-3">
                     <label for="styleImage" class="form-label">Upload Style Image (Optional)</label>
                     <input type="file" class="form-control" id="styleImage" name="styleImage" accept="image/*">
-                    <small class="form-text text-muted">Shown on the admin page while this browser tab stays open.</small>
+                    <small class="form-text text-muted">Your style reference is stored privately and shown only in the signed-in admin page.</small>
                 </div>
 
                 <div class="mb-3">
@@ -76,13 +79,24 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="date" class="form-label">Appointment Date</label>
-                    <input type="date" class="form-control" id="date" name="date" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="time" class="form-label">Appointment Time</label>
-                    <input type="time" class="form-control" id="time" name="time" required>
+                    <label class="form-label">Choose an available appointment</label>
+                    <div class="appointment-calendar" aria-label="Available appointment dates">
+                        <div class="calendar-header">
+                            <button type="button" class="calendar-nav" id="previousMonth" aria-label="Previous month">&lsaquo;</button>
+                            <strong id="calendarMonth" aria-live="polite"></strong>
+                            <button type="button" class="calendar-nav" id="nextMonth" aria-label="Next month">&rsaquo;</button>
+                        </div>
+                        <div class="calendar-weekdays" aria-hidden="true">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <div id="calendarDays" class="calendar-days" role="group" aria-label="Choose a date"></div>
+                    </div>
+                    <p id="availabilityMessage" class="form-text text-muted" aria-live="polite">Loading available dates...</p>
+                    <label for="slotId" class="form-label mt-3">Available times</label>
+                    <select class="form-select" id="slotId" name="slotId" required disabled>
+                        <option value="">Select an available date first</option>
+                    </select>
+                    <small class="form-text text-muted">Your requested time is held while we review your booking. It is confirmed only after we approve it.</small>
                 </div>
 
                 <div class="mb-3">
@@ -93,6 +107,7 @@
 
                 <button type="submit" class="btn btn-primary w-100 mt-3 btn-gradient animate-hover" id="submitBtn">Submit</button>
             </form>
+            <p class="text-center mt-4 mb-0">Have a suggestion? <a href="feedback.html">Send private feedback</a>.</p>
         </div>
     </div>
 
@@ -101,86 +116,157 @@
         const form = document.getElementById('bookingForm');
         const statusBox = document.getElementById('formStatus');
         const submitBtn = document.getElementById('submitBtn');
-        const BOOKING_EMAIL = 'kagisohopem@gmail.com';
-
         function showStatus(message, type) {
             statusBox.textContent = message;
             statusBox.className = `alert alert-${type}`;
         }
 
-        function getBookings() {
-            try {
-                return JSON.parse(localStorage.getItem('dtmh_bookings')) || [];
-            } catch (e) {
-                return [];
+        const calendarDays = document.getElementById('calendarDays');
+        const calendarMonth = document.getElementById('calendarMonth');
+        const availabilityMessage = document.getElementById('availabilityMessage');
+        const slotSelect = document.getElementById('slotId');
+        const availableByDate = new Map();
+        let visibleMonth = new Date();
+        visibleMonth.setDate(1);
+        let selectedDate = '';
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function renderCalendar() {
+            calendarDays.replaceChildren();
+            calendarMonth.textContent = visibleMonth.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+
+            const firstDay = new Date(visibleMonth);
+            const mondayOffset = (firstDay.getDay() + 6) % 7;
+            const gridStart = new Date(firstDay);
+            gridStart.setDate(firstDay.getDate() - mondayOffset);
+            const today = formatDate(new Date());
+
+            for (let index = 0; index < 42; index += 1) {
+                const date = new Date(gridStart);
+                date.setDate(gridStart.getDate() + index);
+                const dateKey = formatDate(date);
+                const dayButton = document.createElement('button');
+                dayButton.type = 'button';
+                dayButton.className = 'calendar-day';
+                dayButton.textContent = String(date.getDate());
+                dayButton.setAttribute('aria-label', date.toLocaleDateString(undefined, {
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                }));
+                dayButton.setAttribute('aria-pressed', String(dateKey === selectedDate));
+
+                if (date.getMonth() !== visibleMonth.getMonth()) {
+                    dayButton.classList.add('outside-month');
+                }
+                if (availableByDate.has(dateKey) && dateKey >= today) {
+                    dayButton.classList.add('has-availability');
+                    dayButton.title = `${availableByDate.get(dateKey).length} available time slot(s)`;
+                    dayButton.addEventListener('click', () => selectDate(dateKey));
+                } else {
+                    dayButton.disabled = true;
+                }
+                if (dateKey === selectedDate) {
+                    dayButton.classList.add('selected');
+                }
+                calendarDays.appendChild(dayButton);
             }
         }
 
-        function readFileAsDataUrl(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
+        function selectDate(dateKey) {
+            selectedDate = dateKey;
+            slotSelect.replaceChildren(new Option('Choose a time', ''));
+            (availableByDate.get(dateKey) || []).forEach((slot) => {
+                const start = slot.start_time.slice(0, 5);
+                const end = slot.end_time.slice(0, 5);
+                slotSelect.add(new Option(`${start}–${end}`, slot.id));
             });
+            slotSelect.disabled = false;
+            availabilityMessage.textContent = `Available times for ${new Date(`${dateKey}T00:00:00`).toLocaleDateString(undefined, {
+                weekday: 'long', month: 'long', day: 'numeric'
+            })}.`;
+            renderCalendar();
         }
+
+        async function loadAvailability() {
+            try {
+                const response = await fetch('get_available_slots.php', { cache: 'no-store' });
+                const result = await response.json();
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || 'Could not load available appointments.');
+                }
+
+                availableByDate.clear();
+                result.slots.forEach((slot) => {
+                    if (!availableByDate.has(slot.appointment_date)) {
+                        availableByDate.set(slot.appointment_date, []);
+                    }
+                    availableByDate.get(slot.appointment_date).push(slot);
+                });
+
+                if (availableByDate.size) {
+                    const firstDate = [...availableByDate.keys()].sort()[0];
+                    const [year, month] = firstDate.split('-').map(Number);
+                    visibleMonth = new Date(year, month - 1, 1);
+                    availabilityMessage.textContent = 'Available dates are highlighted.';
+                } else {
+                    availabilityMessage.textContent = 'There are no available dates right now. Please check back or contact us.';
+                }
+                renderCalendar();
+            } catch (error) {
+                availabilityMessage.textContent = 'We could not load available dates. Please refresh or contact us.';
+                showStatus(error.message, 'danger');
+            }
+        }
+
+        document.getElementById('previousMonth').addEventListener('click', () => {
+            visibleMonth.setMonth(visibleMonth.getMonth() - 1);
+            renderCalendar();
+        });
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            visibleMonth.setMonth(visibleMonth.getMonth() + 1);
+            renderCalendar();
+        });
+        loadAvailability();
 
         form.addEventListener('submit', async function (event) {
             event.preventDefault();
+            if (!slotSelect.value) {
+                showStatus('Please choose one of the highlighted dates and an available time.', 'warning');
+                return;
+            }
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
 
             try {
-                const fileInput = document.getElementById('styleImage');
-                let styleImage = null;
-
-                if (fileInput.files[0]) {
-                    if (fileInput.files[0].size > 1_500_000) {
-                        showStatus('That style image is too large for this no-server version (max ~1.5MB). Your booking will still be saved without it.', 'warning');
-                    } else {
-                        styleImage = await readFileAsDataUrl(fileInput.files[0]);
+                const response = await fetch('process_booking.php', {
+                    method: 'POST',
+                    body: new FormData(form)
+                });
+                const result = await response.json();
+                if (!response.ok || !result.success) {
+                    if (response.status === 409) {
+                        await loadAvailability();
+                        selectedDate = '';
+                        slotSelect.replaceChildren(new Option('Select an available date first', ''));
+                        slotSelect.disabled = true;
                     }
+                    throw new Error(result.message || 'We could not save your request. Please try again.');
                 }
 
-                const bookingData = {
-                    id: Date.now(),
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
-                    service: document.getElementById('service').value,
-                    styleImage: styleImage,
-                    bringHairpieces: document.querySelector('input[name="bringHairpieces"]:checked').value,
-                    date: document.getElementById('date').value,
-                    time: document.getElementById('time').value,
-                    message: document.getElementById('message').value,
-                    status: 'Pending',
-                    createdAt: new Date().toISOString()
-                };
-
-                const bookings = getBookings();
-                bookings.push(bookingData);
-                localStorage.setItem('dtmh_bookings', JSON.stringify(bookings));
-
-                const subject = encodeURIComponent(`New appointment booking from ${bookingData.name}`);
-                const body = encodeURIComponent(
-                    `Appointment Booking Details:\n\n` +
-                    `Name: ${bookingData.name}\n` +
-                    `Email: ${bookingData.email}\n` +
-                    `Phone: ${bookingData.phone}\n` +
-                    `Service: ${bookingData.service}\n` +
-                    `Bring Hairpieces: ${bookingData.bringHairpieces}\n` +
-                    `Date: ${bookingData.date}\n` +
-                    `Time: ${bookingData.time}\n` +
-                    `Message: ${bookingData.message || 'None'}\n`
-                );
-
-                window.location.href = `mailto:${BOOKING_EMAIL}?subject=${subject}&body=${body}`;
-
-                showStatus('Your appointment request has been saved and your email app has been opened with the booking details ready to send to kagisohopem@gmail.com.', 'success');
+                showStatus(result.message, result.emailSent ? 'success' : 'warning');
                 form.reset();
                 document.getElementById('charCounter').textContent = '0/250 characters';
+                selectedDate = '';
+                slotSelect.replaceChildren(new Option('Select an available date first', ''));
+                slotSelect.disabled = true;
+                await loadAvailability();
             } catch (err) {
-                showStatus('Something went wrong saving your booking. Please try again.', 'danger');
+                showStatus(err.message, 'danger');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit';

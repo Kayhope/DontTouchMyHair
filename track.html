@@ -3,49 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Track Bookings</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>Owner Dashboard | Don't Touch My Hair</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="nav.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
     <script defer src="track.js"></script>
 </head>
 <body>
     <nav class="site-nav">
-        <div class="nav-brand"><a href="index.html" aria-label="Don't Touch My Hair home"><img src="logotam.jpeg" alt="Don't Touch My Hair logo" class="brand-logo"></a></div>
+        <div class="nav-brand"><a href="index.html" aria-label="Don't Touch My Hair home"><img src="logotam.jpeg" alt="" class="brand-logo"><span class="brand-copy"><strong>Don't Touch My Hair</strong><small>Owner dashboard</small></span></a></div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
             <li><a href="booking.html">Book</a></li>
+            <li><a href="buy.html">Buy Hair Oil</a></li>
         </ul>
     </nav>
 
-    <div class="user-container">
-        <header>
-            <h1>Track Customer Bookings</h1>
-            <p style="color:#999; font-size:0.9em;">No-server version — showing bookings saved in this browser (must be opened on the same computer/browser as the booking page).</p>
-        </header>
-
-        <section class="booking-list">
-            <h2>All Bookings</h2>
-            <p id="emptyMsg" class="d-none">No bookings yet.</p>
-            <table id="bookingTable">
-                <thead>
-                    <tr>
-                        <th>Customer</th>
-                        <th>Contact</th>
-                        <th>Service</th>
-                        <th>Appointment</th>
-                        <th>Hairpieces</th>
-                        <th>Status</th>
-                        <th>Style Image</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="bookingList"></tbody>
-            </table>
+    <main class="admin-shell">
+        <section id="loginPanel" class="admin-panel">
+            <h1>Owner sign in</h1>
+            <p>Sign in to manage available appointments, booking requests, and private feedback.</p>
+            <form id="loginForm">
+                <label class="form-label" for="adminPassword">Admin password</label>
+                <input class="form-control mb-3" type="password" id="adminPassword" autocomplete="current-password" required>
+                <button class="btn btn-primary" type="submit" id="loginButton">Sign in</button>
+                <p id="loginMessage" class="mt-3" role="alert"></p>
+            </form>
         </section>
 
-        <footer>
-            <a href="booking.html">Go to Booking Page</a>
-        </footer>
-    </div>
+        <div id="adminDashboard" hidden>
+            <header class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                <div>
+                    <h1>Appointments &amp; feedback</h1>
+                    <p class="text-muted mb-0">You choose which dates and appointment times customers can request.</p>
+                </div>
+                <button class="btn btn-outline-secondary" type="button" id="logoutButton">Sign out</button>
+            </header>
+
+            <div id="adminMessage" class="alert d-none" role="status" aria-live="polite"></div>
+
+            <section class="admin-card">
+                <h2>Open an appointment time</h2>
+                <p class="text-muted">Add each appointment time that works for you. Each range is one booking; add separate ranges if you can take more than one client that day. Pending requests hold the slot until you approve or decline them.</p>
+                <form id="slotForm" class="admin-grid">
+                    <div>
+                        <label class="form-label" for="slotDate">Date</label>
+                        <input class="form-control" type="date" id="slotDate" required>
+                    </div>
+                    <div>
+                        <label class="form-label" for="slotStart">Start time</label>
+                        <input class="form-control" type="time" id="slotStart" required>
+                    </div>
+                    <div>
+                        <label class="form-label" for="slotEnd">End time</label>
+                        <input class="form-control" type="time" id="slotEnd" required>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Add available time</button>
+                </form>
+                <div class="mt-4">
+                    <h3 class="h5">Upcoming times</h3>
+                    <div id="slotList" class="admin-list"></div>
+                </div>
+            </section>
+
+            <section class="admin-card">
+                <h2>Booking requests</h2>
+                <div id="bookingList" class="admin-list"></div>
+            </section>
+
+            <section class="admin-card">
+                <h2>Private customer feedback</h2>
+                <p class="text-muted">Only you can see this feedback in the admin area.</p>
+                <div id="feedbackList" class="admin-list"></div>
+            </section>
+        </div>
+    </main>
 </body>
 </html>
